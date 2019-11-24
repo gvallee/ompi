@@ -110,6 +110,9 @@ mmap_register(void)
                                            OPAL_INFO_LVL_3,
                                            MCA_BASE_VAR_SCOPE_ALL_EQ,
                                            &mca_shmem_mmap_component.priority);
+    if (0 > ret) {
+        return ret;
+    }
 
     /*
      * Do we want the "warning: your mmap file is on NFS!" message?  Per a
