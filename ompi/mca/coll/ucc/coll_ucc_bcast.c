@@ -9,7 +9,7 @@
 #include "coll_ucc_common.h"
 
 static inline ucc_status_t mca_coll_ucc_bcast_init(void *buf, int count, struct ompi_datatype_t *dtype,
-                                                   int root, mca_coll_ucc_module_t *ucc_module,
+                                                   int root, bool blocking, mca_coll_ucc_module_t *ucc_module,
                                                    ucc_coll_req_h *req,
                                                    mca_coll_ucc_req_t *coll_req)
 {
@@ -30,6 +30,10 @@ static inline ucc_status_t mca_coll_ucc_bcast_init(void *buf, int count, struct 
             .mem_type = UCC_MEMORY_TYPE_UNKNOWN
         }
     };
+    if (!blocking) {
+        coll.mask  = UCC_COLL_ARGS_FIELD_FLAGS;
+        coll.flags = UCC_COLL_ARGS_HINT_OPTMIZE_OVERLAP_CPU;
+    }
     COLL_UCC_REQ_INIT(coll_req, req, coll, ucc_module);
     return UCC_OK;
 fallback:
@@ -44,7 +48,7 @@ int mca_coll_ucc_bcast(void *buf, int count, struct ompi_datatype_t *dtype,
     ucc_coll_req_h         req;
     UCC_VERBOSE(3, "running ucc bcast");
     COLL_UCC_CHECK(mca_coll_ucc_bcast_init(buf, count, dtype, root,
-                                           ucc_module, &req, NULL));
+                                           true, ucc_module, &req, NULL));
     COLL_UCC_POST_AND_CHECK(req);
     COLL_UCC_CHECK(coll_ucc_req_wait(req));
     return OMPI_SUCCESS;
@@ -66,7 +70,7 @@ int mca_coll_ucc_ibcast(void *buf, int count, struct ompi_datatype_t *dtype,
     UCC_VERBOSE(3, "running ucc ibcast");
     COLL_UCC_GET_REQ(coll_req);
     COLL_UCC_CHECK(mca_coll_ucc_bcast_init(buf, count, dtype, root,
-                                           ucc_module, &req, coll_req));
+                                           false, ucc_module, &req, coll_req));
     COLL_UCC_POST_AND_CHECK(req);
     *request = &coll_req->super;
     return OMPI_SUCCESS;
