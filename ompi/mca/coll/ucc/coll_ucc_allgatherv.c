@@ -32,6 +32,7 @@ static inline ucc_status_t mca_coll_ucc_allgatherv_init(const void *sbuf, int sc
 
     ucc_coll_args_t coll = {
         .mask      = 0,
+        .flags     = 0,
         .coll_type = UCC_COLL_TYPE_ALLGATHERV,
         .src.info = {
             .buffer        = (void*)sbuf,
@@ -53,8 +54,8 @@ static inline ucc_status_t mca_coll_ucc_allgatherv_init(const void *sbuf, int sc
         coll.flags = UCC_COLL_ARGS_FLAG_IN_PLACE;
     }
     if (blocking) {
-        coll.mask  = UCC_COLL_ARGS_FIELD_FLAGS;
-        coll.flags = UCC_COLL_ARGS_FLAG_BLOCKING;
+        coll.mask  |= UCC_COLL_ARGS_FIELD_FLAGS;
+        coll.flags |= UCC_COLL_ARGS_FLAG_BLOCKING;
     }
     COLL_UCC_REQ_INIT(coll_req, req, coll, ucc_module);
     return UCC_OK;
