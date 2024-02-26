@@ -16,6 +16,7 @@
  *                         reserved.
  * Copyright (c) 2016      Research Organization for Information Science
  *                         and Technology (RIST). All rights reserved.
+ * Copyright (c) 2024      NVIDIA Corporation.  All rights reserved.
  * $COPYRIGHT$
  *
  * Additional copyrights may follow
@@ -32,6 +33,9 @@
 #include "ompi/errhandler/errhandler.h"
 #include "ompi/mpi/fortran/base/fint_2_int.h"
 
+#include "opal/mca/backtrace/backtrace.h"
+bool ompi_errhandle_generate_backtrace = true;
+
 
 int ompi_errhandler_invoke(ompi_errhandler_t *errhandler, void *mpi_object,
                            int object_type, int err_code, const char *message)
@@ -41,10 +45,14 @@ int ompi_errhandler_invoke(ompi_errhandler_t *errhandler, void *mpi_object,
     ompi_win_t *win;
     ompi_file_t *file;
 
+    if( ompi_errhandle_generate_backtrace ) {
+        opal_backtrace_print(NULL, NULL, 2);
+    }
+
     /* If we got no errorhandler, then just invoke errors_abort */
     if (NULL == errhandler) {
         ompi_mpi_errors_are_fatal_comm_handler(NULL, NULL, message);
-	return err_code;
+        return err_code;
     }
 
     /* Figure out what kind of errhandler it is, figure out if it's
