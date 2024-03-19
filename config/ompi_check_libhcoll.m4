@@ -48,6 +48,21 @@ AC_DEFUN([OMPI_CHECK_HCOLL],[
                               [ompi_check_hcoll_happy="no"])
 
            AS_IF([test "$ompi_check_hcoll_happy" = "yes"],
+                 [],
+                 [
+                     OPAL_CHECK_PACKAGE([$1],
+                                        [hcoll/api/hcoll_api.h],
+                                        [$ompi_check_hcoll_libs],
+                                        [hcoll_get_version],
+                                        [-locoms],
+                                        [$ompi_check_hcoll_dir],
+                                        [],
+                                        [ompi_check_hcoll_happy="yes"],
+                                        [ompi_check_hcoll_happy="no"])
+
+                 ])
+
+           AS_IF([test "$ompi_check_hcoll_happy" = "yes"],
                  [
                      CPPFLAGS=$coll_hcoll_CPPFLAGS
                      LDFLAGS=$coll_hcoll_LDFLAGS
@@ -55,7 +70,6 @@ AC_DEFUN([OMPI_CHECK_HCOLL],[
                      AC_CHECK_FUNCS(hcoll_context_free, [], [])
                  ],
                  [])
-
            CPPFLAGS=$CPPFLAGS_save
            LDFLAGS=$LDFLAGS_save
            LIBS=$LIBS_save],
