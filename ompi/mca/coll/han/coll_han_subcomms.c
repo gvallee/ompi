@@ -235,13 +235,13 @@ int mca_coll_han_comm_create(struct ompi_communicator_t *comm,
                                  comm->c_coll->coll_allreduce_module);
     if( local_procs == 1 ) {
         /* restore saved collectives */
-        HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, allgatherv);
-        HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, allgather);
-        HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, allreduce);
-        HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, bcast);
-        HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, reduce);
-        HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, gather);
-        HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, scatter);
+        HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, allgatherv);
+        HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, allgather);
+        HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, allreduce);
+        HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, bcast);
+        HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, reduce);
+        HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, gather);
+        HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, scatter);
         han_module->enabled = false;  /* entire module set to pass-through from now on */
         return OMPI_ERR_NOT_SUPPORTED;
     }
@@ -320,13 +320,13 @@ int mca_coll_han_comm_create(struct ompi_communicator_t *comm,
     han_module->cached_vranks = vranks;
 
     /* Reset the saved collectives to point back to HAN */
-    HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, allgatherv);
-    HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, allgather);
-    HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, allreduce);
-    HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, bcast);
-    HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, reduce);
-    HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, gather);
-    HAN_SUBCOM_LOAD_COLLECTIVE(fallbacks, comm, han_module, scatter);
+    HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, allgatherv);
+    HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, allgather);
+    HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, allreduce);
+    HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, bcast);
+    HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, reduce);
+    HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, gather);
+    HAN_SUBCOM_RESTORE_COLLECTIVE(fallbacks, comm, han_module, scatter);
 
     OBJ_DESTRUCT(&comm_info);
     return OMPI_SUCCESS;
