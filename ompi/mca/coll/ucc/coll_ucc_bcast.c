@@ -34,7 +34,7 @@ static inline ucc_status_t mca_coll_ucc_bcast_init(void *buf, int count, struct 
     };
     if (blocking) {
         coll.mask  = UCC_COLL_ARGS_FIELD_FLAGS;
-        coll.flags = UCC_COLL_ARGS_FLAG_BLOCKING;
+        coll.flags = UCC_COLL_ARGS_HINT_OPTIMIZE_LATENCY;
     }
     COLL_UCC_REQ_INIT(coll_req, req, coll, ucc_module);
     return UCC_OK;
